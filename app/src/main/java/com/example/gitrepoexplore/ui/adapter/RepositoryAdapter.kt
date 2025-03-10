@@ -1,9 +1,10 @@
-package com.example.gitrepoexplore
+package com.example.gitrepoexplore.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitrepoexplore.databinding.ItemRepositoryBinding
+import com.example.gitrepoexplore.model.Repository
 
 class RepositoryAdapter(private var repositories: MutableList<Repository>) :
     RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
@@ -14,8 +15,8 @@ class RepositoryAdapter(private var repositories: MutableList<Repository>) :
             binding.repoName.text = repository.name
             binding.repoDescription.text = repository.description ?: "No description"
             binding.repoLanguage.text = repository.language ?: "Unknown"
-            binding.repoStars.text = "⭐ ${repository.stargazers_count}"
-            binding.repoForks.text = "🍴 ${repository.forks_count}"
+            binding.repoStars.text = "⭐ ${repository.stargazersCount}"
+            binding.repoForks.text = "🍴 ${repository.forksCount}"
         }
     }
 

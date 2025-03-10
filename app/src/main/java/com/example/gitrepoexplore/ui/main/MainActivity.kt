@@ -1,4 +1,4 @@
-package com.example.gitrepoexplore
+package com.example.gitrepoexplore.ui.main
 
 import android.os.Bundle
 import android.view.View
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gitrepoexplore.databinding.ActivityMainBinding
+import com.example.gitrepoexplore.ui.adapter.RepositoryAdapter
+import com.example.gitrepoexplore.viewmodel.GitHubViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,8 +17,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: GitHubViewModel by viewModels()
     private lateinit var adapter: RepositoryAdapter
     private lateinit var binding: ActivityMainBinding
-
     private var isLoading = false
+    private var currentUsername: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +35,21 @@ class MainActivity : AppCompatActivity() {
         binding.btnFetchRepos.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             if (username.isNotEmpty()) {
+                currentUsername = username
                 adapter.clearData()
-                viewModel.fetchRepositories(username)
+                viewModel.fetchRepositories(username, isNewSearch = true)
             }
         }
 
         viewModel.repositories.observe(this) { repositories ->
             adapter.updateData(repositories)
+
         }
 
         viewModel.isLoading.observe(this) { loading ->
             binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
             isLoading = loading
         }
-
 
         binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -57,10 +60,7 @@ class MainActivity : AppCompatActivity() {
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                 if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 2) {
-                    val username = binding.etUsername.text.toString().trim()
-                    if (username.isNotEmpty()) {
-                        viewModel.fetchRepositories(username)
-                    }
+                    currentUsername?.let { viewModel.fetchRepositories(it) } // LOAD NEXT PAGE
                 }
             }
         })

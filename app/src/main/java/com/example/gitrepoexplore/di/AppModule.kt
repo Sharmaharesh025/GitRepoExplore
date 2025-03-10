@@ -1,5 +1,6 @@
-package com.example.gitrepoexplore
+package com.example.gitrepoexplore.di
 
+import com.example.gitrepoexplore.network.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

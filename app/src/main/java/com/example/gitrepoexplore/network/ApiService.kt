@@ -1,5 +1,6 @@
-package com.example.gitrepoexplore
+package com.example.gitrepoexplore.network
 
+import com.example.gitrepoexplore.model.Repository
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
